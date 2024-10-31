@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
-from . import schemas
+from . import schema
 from . import models
 
 def get_registers(db:Session):
@@ -10,14 +10,19 @@ def get_register(db:Session, register_id: int):
     return db.query(models.RegisterModel).filter(models.RegisterModel.id == register_id).first()
 
 
-def create_register(db: Session, register:schemas.RegisterBase):
-    db_rifa = models.RegisterModel(**register.model_dump())
-    db.add(db_rifa)
-    db.commit()
-    db.refresh(db_rifa)
-    return db_rifa
+def create_register(db: Session ,register:schema.RegisterBase):
+    numero = register.numero
+    valida_numero = db.query(models.RegisterModel).filter(models.RegisterModel.numero == numero).first()
+    if valida_numero:
+        print("ja tem")
+    else:
+        db_rifa = models.RegisterModel(**register.model_dump())
+        db.add(db_rifa)
+        db.commit()
+        db.refresh(db_rifa)
+        return db_rifa
 
-def update_register(db: Session,register_id: int, register: schemas.RegisterUpdate):
+def update_register(db: Session,register_id: int, register: schema.RegisterUpdate):
     db_rifa = db.query(models.RegisterModel).filter(models.RegisterModel.id == register_id).first()
 
     if db_rifa is None:

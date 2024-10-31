@@ -1,12 +1,13 @@
 #representacao do banco de dados
-from sqlalchemy import Column, Integer, String, DateTime, Select, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.sql import func
 from .database import Base
 
 class RegisterModel(Base):
     __tablename__ = 'sorteio'
     id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String, index=True)
-    created_at = Column(DateTime(timezone=True), default=func.now(), index=True)
-    updated = Column(Boolean, default=False)
+    nome = Column(String)
+    numero = Column(Integer, unique=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated = Column(Boolean)
     update_date = Column(DateTime)
