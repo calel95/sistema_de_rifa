@@ -35,5 +35,16 @@ def delete_product(register_id: int, db: Session = Depends(database.get_db)):
 def update_products(register_id: int, register: schema.RegisterUpdate, db: Session = Depends(database.get_db)):
     db_rifa = controller.update_register(db=db, register_id=register_id, register=register)
     if db_rifa is None:
-        raise HTTPException(status_code=404, detail="Registro com o id {register_id} não encontrado")
+        raise HTTPException(status_code=404, detail="Registro com o numero {register_id} não encontrado")
     return db_rifa
+
+@router.post("/numeros/massa", description="Faz a inserçao de 1000 numeros sequenciais na coluna numeros")
+def insert_mass_numbers(db: Session = Depends(database.get_db)):
+    db_rifa = controller.inserir_numeros_em_massa(db=db)
+    if db_rifa is None:
+        raise HTTPException(status_code=500, detail="Já existe o numero no banco")
+    return db_rifa
+
+@router.delete("/numeros/", description="Faz TRUNCATE na tabela")
+def delete_truncate_table(db: Session = Depends(database.get_db)):
+    return controller.delete_truncate(db=db)
