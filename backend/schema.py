@@ -25,5 +25,4 @@ class RegisterGet(RegisterBase):
         from_attributes = True
 
 class RegisterUpdate(BaseModel):
-    numero: Optional[int] = None
     nome: Optional[str] = None

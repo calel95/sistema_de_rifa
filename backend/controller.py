@@ -27,10 +27,10 @@ def update_register(db: Session,register_id: int, register: schema.RegisterUpdat
 
     if db_rifa is None:
         return None
-    if register.numero is not None:
-        db_rifa.numero = register.numero
-    if register.numero is None:
-        db_rifa.numero = db_rifa.numero
+    #if register.numero is not None:
+    #    db_rifa.numero = register.numero
+    #if register.numero is None:
+    #    db_rifa.numero = db_rifa.numero
     if register.nome is not None:
         db_rifa.nome = register.nome
     if register.nome is None:
