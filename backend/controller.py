@@ -4,7 +4,7 @@ from . import schema
 from . import models
 
 def get_registers(db:Session):
-    return db.query(models.RegisterModel).all()
+    return db.query(models.RegisterModel).order_by(models.RegisterModel.updated.asc(), models.RegisterModel.numero.asc()).all()
 
 def get_register(db:Session, register_id: int):
     return db.query(models.RegisterModel).filter(models.RegisterModel.numero == register_id).first()
