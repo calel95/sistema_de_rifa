@@ -4,9 +4,9 @@ sistema de rifa simples
 - ~~remover um registro~~
 - ~~alterar um registro~~
 - ~~inserir massa de numeros~~
-- visualizar todos os numeros vendidos
-- visualizar todos os numeros disponiveis
-- visualizar tudo
+- ~~visualizar todos os numeros vendidos~~
+- ~~visualizar todos os numeros disponiveis~~
+- ~~visualizar tudo~~
 - se o numero para adicionar ja existir, nao deixar adicionar
 
 
