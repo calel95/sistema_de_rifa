@@ -33,6 +33,7 @@ def delete_product(register_id: int, db: Session = Depends(database.get_db)):
 
 @router.put("/numeros/{register_id}",response_model=schema.RegisterGet, description="Faz a atualização de um Registro")
 def update_products(register_id: int, register: schema.RegisterUpdate, db: Session = Depends(database.get_db)):
+    print(register)
     db_rifa = controller.update_register(db=db, register_id=register_id, register=register)
     if db_rifa is None:
         raise HTTPException(status_code=404, detail="Registro com o numero {register_id} não encontrado")

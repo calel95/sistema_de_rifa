@@ -12,7 +12,7 @@ def main():
     st.sidebar.title("Opções")
     opcao = st.sidebar.radio(
         "Escolha uma opção:",
-        ["Visualizar Números", "Adicionar Número", "Remover Número", "Atualizar Número"]
+        ["Visualizar Números", "Comprar Número","Remover Comprador"]
     )
     
     # URL base da sua API FastAPI
@@ -54,7 +54,7 @@ def main():
         
         with tab3:
             # Filtrar apenas números indisponíveis
-            st.write("Números Indisponíveis")
+            st.write("Números Comprados")
                     # Filtrar números indisponíveis (nome preenchido)
             df_indisp = df[df['nome'].notna() & (df['nome'] != "")]
             if not df_indisp.empty:
@@ -62,62 +62,69 @@ def main():
             else:
                 st.info("Não há números indisponíveis")
     
-    elif opcao == "Adicionar Número":
-        st.header("Adicionar Novo Número")
+    # elif opcao == "Adicionar Número":
+    #     st.header("Adicionar Novo Número")
         
-        with st.form("adicionar_numero"):
-            numero = st.text_input("Número da Rifa")
-            nome = st.text_input("Nome do Comprador")
-            submitted = st.form_submit_button("Adicionar")
+    #     with st.form("adicionar_numero"):
+    #         numero = st.text_input("Número da Rifa")
+    #         nome = st.text_input("Nome do Comprador")
+    #         submitted = st.form_submit_button("Adicionar")
             
-            if submitted:
-                if numero and nome:
-                    try:
-                        # Aqui você faria a chamada real para sua API
-                        response = requests.post(
-                        f"{BASE_URL}/numeros/",
-                        json={"numero": numero, "nome": nome}
-                        )
-                        st.success(f"Número {numero} adicionado com sucesso!")
-                    except Exception as e:
-                        st.error(f"Erro ao adicionar número: {e}")
-                else:
-                    st.warning("Por favor, preencha todos os campos")
+    #         if submitted:
+    #             if numero and nome:
+    #                 try:
+    #                     # Aqui você faria a chamada real para sua API
+    #                     response = requests.post(
+    #                     BASE_URL,
+    #                     json={"numero": numero, "nome": nome}
+    #                     )
+    #                     st.success(f"Número {numero} adicionado com sucesso!")
+    #                 except Exception as e:
+    #                     st.error(f"Erro ao adicionar número: {e}")
+    #             else:
+    #                 st.warning("Por favor, preencha todos os campos")
     
-    elif opcao == "Remover Número":
-        st.header("Remover Número")
-        
-        numero_remover = st.text_input("Digite o número que deseja remover")
-        if st.button("Remover"):
-            if numero_remover:
-                try:
-                    # Aqui você faria a chamada real para sua API
-                    response = requests.delete(f"{BASE_URL}/numeros/{numero_remover}")
-                    st.success(f"Número {numero_remover} removido com sucesso!")
-                except Exception as e:
-                    st.error(f"Erro ao remover número: {e}")
-            else:
-                st.warning("Por favor, digite um número")
     
-    elif opcao == "Atualizar Número":
-        st.header("Atualizar Número")
+    elif opcao == "Comprar Número":
+        st.header("Comprar Número")
         
-        with st.form("atualizar_numero"):
+        with st.form("comprar_numero"):
             numero_atualizar = st.text_input("Número da Rifa")
             novo_nome = st.text_input("Novo Nome do Comprador")
-            submitted = st.form_submit_button("Atualizar")
+            submitted = st.form_submit_button("Comprar")
             
             if submitted:
                 if numero_atualizar and novo_nome:
                     try:
                         # Aqui você faria a chamada real para sua API
                         response = requests.put(
-                        f"{BASE_URL}/numeros/{numero_atualizar}",
+                        f"{BASE_URL}{numero_atualizar}",
                         json={"nome": novo_nome}
                         )
-                        st.success(f"Número {numero_atualizar} atualizado com sucesso!")
+                        st.success(f"Número {numero_atualizar} comprado com sucesso!")
                     except Exception as e:
-                        st.error(f"Erro ao atualizar número: {e}")
+                        st.error(f"Erro ao comprar número: {e}")
+                else:
+                    st.warning("Por favor, preencha todos os campos")
+
+    elif opcao == "Remover Comprador":
+        st.header("Remover Comprador")
+        
+        with st.form("remover_comp"):
+            numero_atualizar = st.text_input("Número da Rifa")
+            submitted = st.form_submit_button("Atualizar")
+            
+            if submitted:
+                if numero_atualizar:
+                    try:
+                        # Aqui você faria a chamada real para sua API
+                        response = requests.put(
+                        f"{BASE_URL}{numero_atualizar}",
+                        json={"nome": None}
+                        )
+                        st.success(f"comprador do numero {numero_atualizar} removido com sucesso!")
+                    except Exception as e:
+                        st.error(f"Erro ao remover comprador: {e}")
                 else:
                     st.warning("Por favor, preencha todos os campos")
 

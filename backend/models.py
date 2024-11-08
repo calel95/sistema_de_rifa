@@ -6,7 +6,7 @@ from .database import Base
 class RegisterModel(Base):
     __tablename__ = 'sorteio'
     #id = Column(Integer, primary_key=True, index=True, autoincrement="false")
-    nome = Column(String)
+    nome = Column(String, nullable=True)
     numero = Column(Integer, primary_key=True, index=True, autoincrement="false")
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated = Column(Boolean)

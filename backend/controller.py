@@ -4,7 +4,7 @@ from . import schema
 from . import models
 
 def get_registers(db:Session):
-    return db.query(models.RegisterModel).order_by(models.RegisterModel.updated.asc(), models.RegisterModel.numero.asc()).all()
+    return db.query(models.RegisterModel).order_by(models.RegisterModel.updated.asc(),models.RegisterModel.numero.asc()).all()
 
 def get_register(db:Session, register_id: int):
     return db.query(models.RegisterModel).filter(models.RegisterModel.numero == register_id).first()
@@ -34,7 +34,9 @@ def update_register(db: Session,register_id: int, register: schema.RegisterUpdat
     if register.nome is not None:
         db_rifa.nome = register.nome
     if register.nome is None:
-        db_rifa.nome = db_rifa.nome
+        db_rifa.nome = None
+        db_rifa.update_date = None
+        db_rifa.updated = None
     db_rifa.updated = True
     db_rifa.update_date = func.now()
     db.commit()
