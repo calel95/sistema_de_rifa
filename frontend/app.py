@@ -1,9 +1,20 @@
 import streamlit as st
 import pandas as pd
 import requests
+import random
+from datetime import datetime
 
 # Configuração da página
 st.set_page_config(page_title="Sistema de Rifas", layout="wide")
+
+if 'lista_ganhadores' not in st.session_state:
+    st.session_state.lista_ganhadores = []
+
+def realizar_sorteio(numeros_preenchidos):
+    if not numeros_preenchidos.empty:
+        numero_sorteado = random.choice(numeros_preenchidos["numero"].tolist())
+        ganhador = numeros_preenchidos[numeros_preenchidos["numero"] == numero_sorteado].iloc[0]
+        return ganhador
 
 def main():
     st.title("🎫 Sistema de Rifas")
@@ -12,7 +23,7 @@ def main():
     st.sidebar.title("Opções")
     opcao = st.sidebar.radio(
         "Escolha uma opção:",
-        ["Visualizar Números", "Comprar Número","Remover Comprador"]
+        ["Visualizar Números", "Comprar/Atualizar Número","Remover Comprador", "Realizar Sorteio","Visualizar Ganhadores"]
     )
     
     # URL base da sua API FastAPI
@@ -85,8 +96,8 @@ def main():
     #                 st.warning("Por favor, preencha todos os campos")
     
     
-    elif opcao == "Comprar Número":
-        st.header("Comprar Número")
+    elif opcao == "Comprar/Atualizar Número":
+        st.header("Comprar/Atualizar Número")
         
         with st.form("comprar_numero"):
             numero_atualizar = st.text_input("Número da Rifa")
@@ -127,6 +138,72 @@ def main():
                         st.error(f"Erro ao remover comprador: {e}")
                 else:
                     st.warning("Por favor, preencha todos os campos")
+
+    elif opcao == "Realizar Sorteio":
+        st.header("Realizar Sorteio")
+
+        try:
+            response = requests.get(BASE_URL)
+            if response.status_code == 200:
+                dados = response.json()
+                df = pd.DataFrame(dados)
+
+                numeros_preenchidos = df[df['nome'].notna() & (df['nome'] != "")]
+                st.write(f"Total de números participando do sorteio: {len(numeros_preenchidos)}")
+
+                if st.button("Realizar Sorteio"):
+                    if not numeros_preenchidos.empty:
+                        with st.spinner("Realizando sorteio..."):
+                            # Efeito de suspense
+                            import time
+                            time.sleep(2)
+                            
+                            # Realizar sorteio
+                            ganhador = realizar_sorteio(numeros_preenchidos)
+                            
+                            # Criar container para o resultado
+                            resultado = st.container()
+                            with resultado:
+                                st.balloons()  # Efeito visual
+                                st.markdown("## 🎉 Resultado do Sorteio!")
+                                st.markdown(f"""
+                                    ### Número Sorteado: {ganhador['numero']}
+                                    ### Ganhador(a): {ganhador['nome']}
+                                    #### Data e Hora do Sorteio: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
+                                """)
+                                novo_ganhador = {"Número Sorteado": ganhador['numero'], "Ganhador(a)": ganhador['nome']}
+                                st.session_state.lista_ganhadores.append(novo_ganhador)
+                                
+
+                    else:
+                        st.error("Não há números participando do sorteio!")
+                
+                # Mostrar lista de participantes
+                with st.expander("Ver Lista de Participantes"):
+                    st.dataframe(
+                        numeros_preenchidos,
+                        column_config={
+                            "numero": "Número",
+                            "nome": "Nome do Participante"
+                        },
+                        use_container_width=True
+                    )
+            else:
+                st.error("Erro ao obter dados da API")
+        except Exception as e:
+            st.error(f"Erro ao carregar dados para o sorteio: {e}")
+
+    elif opcao == "Visualizar Ganhadores":
+        st.header("🏆 Lista de Ganhadores")
+        df_ganhadores = pd.DataFrame(st.session_state.lista_ganhadores)
+        # st.dataframe(
+        #             df_ganhadores,
+        #             use_container_width=True
+        #         )
+        st.markdown(df_ganhadores.to_html(index=False), unsafe_allow_html=True)
+
+
+
 
 if __name__ == "__main__":
     main()

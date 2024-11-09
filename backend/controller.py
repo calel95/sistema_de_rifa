@@ -33,12 +33,12 @@ def update_register(db: Session,register_id: int, register: schema.RegisterUpdat
     #    db_rifa.numero = db_rifa.numero
     if register.nome is not None:
         db_rifa.nome = register.nome
+        db_rifa.updated = True
+        db_rifa.update_date = func.now()
     if register.nome is None:
         db_rifa.nome = None
         db_rifa.update_date = None
-        db_rifa.updated = None
-    db_rifa.updated = True
-    db_rifa.update_date = func.now()
+        db_rifa.updated = None   
     db.commit()
     db.refresh(db_rifa)
     return db_rifa

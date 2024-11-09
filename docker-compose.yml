@@ -1,40 +1,33 @@
-# version: '3.8'
-# services:
-#   sqlite:
-#     image: nouchka/sqlite3:latest  # Exemplo de imagem SQLite
-#     volumes:
-#       - sqlite_data:/var/lib/sqlite/data
-#     networks:
-#       - mynetwork
+version: '3.8'
+services:
+  postgres:
+    image: postgres  # Exemplo de imagem SQLite
+    networks:
+      - mynetwork
 
-#   backend:
-#     build:
-#       context: ./backend
-#       dockerfile: Dockerfile
-#     volumes:
-#       - ./sqlite_data:/app/sqlite_data  # Mapeia o diretório local para persistência
-#     environment:
-#       DATABASE_URL: sqlite:///app/sqlite_data/database.db  # Corrigido o caminho
-#     ports:
-#       - "8000:8000"
-#     depends_on:
-#       - sqlite
-#     networks:
-#       - mynetwork
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://database_rifa_user:BbhoY84Y0jbEj8k34RwodIlcp4PT42AQ@dpg-csjrqd5ds78s7394r1s0-a.oregon-postgres.render.com:5432/database_rifa  # Corrigido o caminho
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - mynetwork
 
-#   frontend:
-#     build: 
-#       context: ./frontend
-#       dockerfile: Dockerfile
-#     volumes:
-#       - ./frontend:/app
-#     ports:
-#       - "8501:8501"
-#     networks:
-#       - mynetwork
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "8501:8501"
+    networks:
+      - mynetwork
 
-# networks:
-#   mynetwork: 
-
-# volumes:
-#   sqlite_data:
+networks:
+  mynetwork: 
