@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 import random
 from datetime import datetime
+import time
 
 # Configuração da página
 st.set_page_config(page_title="Sistema de Rifas", layout="wide")
@@ -27,7 +28,8 @@ def main():
     )
     
     # URL base da sua API FastAPI
-    BASE_URL = "http://localhost:8000/numeros/"
+    #BASE_URL = "http://localhost:8000/numeros/"
+    BASE_URL = "http://backend:8000/numeros/"
     
     if opcao == "Visualizar Números":
         st.header("Visualização de Números")
@@ -154,14 +156,11 @@ def main():
                 if st.button("Realizar Sorteio"):
                     if not numeros_preenchidos.empty:
                         with st.spinner("Realizando sorteio..."):
-                            # Efeito de suspense
-                            import time
+                            
                             time.sleep(2)
-                            
-                            # Realizar sorteio
+                                                        
                             ganhador = realizar_sorteio(numeros_preenchidos)
-                            
-                            # Criar container para o resultado
+                                                        
                             resultado = st.container()
                             with resultado:
                                 st.balloons()  # Efeito visual
@@ -178,7 +177,6 @@ def main():
                     else:
                         st.error("Não há números participando do sorteio!")
                 
-                # Mostrar lista de participantes
                 with st.expander("Ver Lista de Participantes"):
                     st.dataframe(
                         numeros_preenchidos,

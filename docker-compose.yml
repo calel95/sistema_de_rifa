@@ -28,6 +28,18 @@ services:
       - "8501:8501"
     networks:
       - mynetwork
+  
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    privileged: true
+    user: root
+    volumes:
+      - ./jenkins:/app
+    ports:
+      - "8080:8080"
+      - "50000:50000"
 
 networks:
   mynetwork: 
