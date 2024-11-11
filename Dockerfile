@@ -6,7 +6,6 @@ FROM python:3.12
 # Definir o diretório de trabalho no container
 RUN pip install poetry 
 
-
 WORKDIR /app
 
 # Copiar os arquivos de dependências e instalar
