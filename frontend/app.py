@@ -27,19 +27,16 @@ def main():
         ["Visualizar Números", "Comprar/Atualizar Número","Remover Comprador", "Realizar Sorteio","Visualizar Ganhadores"]
     )
     
-    # URL base da sua API FastAPI
     #BASE_URL = "http://localhost:8000/numeros/"
     BASE_URL = "http://backend:8000/numeros/"
     
     if opcao == "Visualizar Números":
         st.header("Visualização de Números")
         
-        # Tabs para diferentes visualizações
         tab1, tab2, tab3 = st.tabs(["Todos os Números", "números disponíveis", "Números comprados"])
         
         with tab1:
             try:
-                # Aqui você faria a chamada real para sua API
                 response = requests.get(BASE_URL)
                 rifa = response.json()
                 
@@ -58,7 +55,6 @@ def main():
                 st.error(f"Erro ao carregar os dados: {e}")
         
         with tab2:
-            # Filtrar apenas números disponíveis
             df_disp = df[df['nome'].isna() | (df['nome'] == "")]
             if df_disp.all:               
                 st.dataframe(df_disp, use_container_width=True)
@@ -66,9 +62,7 @@ def main():
                 st.info("Há números disponíveis")
         
         with tab3:
-            # Filtrar apenas números indisponíveis
             st.write("Números Comprados")
-                    # Filtrar números indisponíveis (nome preenchido)
             df_indisp = df[df['nome'].notna() & (df['nome'] != "")]
             if not df_indisp.empty:
                 st.dataframe(df_indisp, use_container_width=True)
@@ -155,12 +149,10 @@ def main():
 
                 if st.button("Realizar Sorteio"):
                     if not numeros_preenchidos.empty:
-                        with st.spinner("Realizando sorteio..."):
-                            
+                        with st.spinner("Realizando sorteio..."):                            
                             time.sleep(2)
                                                         
-                            ganhador = realizar_sorteio(numeros_preenchidos)
-                                                        
+                            ganhador = realizar_sorteio(numeros_preenchidos)                                                        
                             resultado = st.container()
                             with resultado:
                                 st.balloons()  # Efeito visual
@@ -171,8 +163,7 @@ def main():
                                     #### Data e Hora do Sorteio: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}
                                 """)
                                 novo_ganhador = {"Número Sorteado": ganhador['numero'], "Ganhador(a)": ganhador['nome']}
-                                st.session_state.lista_ganhadores.append(novo_ganhador)
-                                
+                                st.session_state.lista_ganhadores.append(novo_ganhador)                                
 
                     else:
                         st.error("Não há números participando do sorteio!")
