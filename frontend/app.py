@@ -29,6 +29,7 @@ def main():
     
     #BASE_URL = "http://localhost:8000/numeros/"
     BASE_URL = "http://backend:8000/numeros/"
+    BASE_URL = "https://sistema-de-rifa.onrender.com/numeros/"
     
     if opcao == "Visualizar Números":
         st.header("Visualização de Números")
